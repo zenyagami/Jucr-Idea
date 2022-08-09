@@ -3,4 +3,10 @@
     <string name="car_statistics_label">Statistics</string>
     <string name="nearby_super_chargers_label">Nearby Supercharges</string>
     <string name="super_chargers_view_all_label">View all</string>
+    <string name="battery_volts">%s Volts</string>
+    <string name="voltage_label">Voltage</string>
+    <string name="charging_time_label">%s Min</string>
+    <string name="range_km_label">%s Km</string>
+    <string name="remaining_charge_label">Remaining charge</string>
+    <string name="charging_type_fast_label">Fast charging</string>
 </resources>

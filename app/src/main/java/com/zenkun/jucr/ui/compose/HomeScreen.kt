@@ -1,5 +1,6 @@
 package com.zenkun.jucr.ui.compose
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,10 +9,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BabyChangingStation
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zenkun.jucr.R
@@ -33,15 +36,16 @@ fun HomeScreen() {
 
 @Composable
 private fun HomeScreenContent(
-    stationList: List<StationModel>
+    stationList: List<StationModel>,
+    statisticsList: List<Statistics>,
 ) {
     val lazyColumnState = rememberLazyListState()
     val lazyRowState = rememberLazyListState()
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -67,22 +71,13 @@ private fun HomeScreenContent(
             state = lazyRowState,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
+            items(statisticsList) {
+                val model = GetStatisticModel(it)
                 StatisticsRowView(
-                    title = "240 Volt",
-                    description = "Voltage"
-                )
-            }
-            item {
-                StatisticsRowView(
-                    title = "240 Volt",
-                    description = "Voltage"
-                )
-            }
-            item {
-                StatisticsRowView(
-                    title = "240 Volt",
-                    description = "Voltage"
+                    title = model.title,
+                    description = model.description,
+                    color = model.color,
+                    icon = model.icon
                 )
             }
         }
@@ -117,6 +112,44 @@ private fun HomeScreenContent(
         }
     }
 }
+
+@Composable
+fun GetStatisticModel(item: Statistics): StatisticModel {
+    return when (item) {
+        is Statistics.ChargeTime -> {
+            StatisticModel(
+                title = stringResource(id = R.string.charging_time_label, item.minutes),
+                description = stringResource(id = R.string.charging_type_fast_label),
+                icon = ImageVector.vectorResource(R.drawable.ic_plug_circle_bolt_solid),
+                color = JucrAppTheme.colors.yellow
+            )
+        }
+        is Statistics.Range -> {
+            StatisticModel(
+                title = stringResource(id = R.string.range_km_label, item.currentRange),
+                description = stringResource(id = R.string.remaining_charge_label),
+                icon = ImageVector.vectorResource(R.drawable.ic_battery_three_quarters_solid),
+                color = JucrAppTheme.colors.success
+            )
+        }
+        is Statistics.BatteryHealth -> {
+            StatisticModel(
+                title = stringResource(id = R.string.battery_volts, item.volts),
+                description = stringResource(id = R.string.voltage_label),
+                icon = ImageVector.vectorResource(R.drawable.ic_car_battery_solid),
+                color = JucrAppTheme.colors.red
+            )
+        }
+    }
+}
+
+data class StatisticModel(
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val color: Color
+)
+
 
 data class StationModel(
     val address: String,
@@ -230,30 +263,49 @@ private fun getMockedStations(): List<StationModel> {
     )
 }
 
+sealed class Statistics {
+    data class BatteryHealth(val volts: Int) : Statistics()
+    data class Range(val currentRange: Int) : Statistics()
+    data class ChargeTime(val minutes: Int) : Statistics()
+}
+
+
 @Composable
 fun StatisticsRowView(
     title: String,
     description: String,
+    color: Color,
+    icon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier) {
+
+    Card(
+        modifier = modifier,
+        border = BorderStroke(
+            width = DividerDefaults.Thickness,
+            DividerDefaults.color.copy(alpha = 0.3f)
+        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .size(130.dp)
+                .size(120.dp)
         ) {
+
             Icon(
-                imageVector = Icons.Default.Person,
+                imageVector = icon,
                 contentDescription = null,
                 modifier = modifier
-                    .size(55.dp)
+                    .size(50.dp)
                     .clip(RoundedCornerShape(50))
                     .background(
-                        color = Color.Red.copy(alpha = 0.1f),
+                        color = color.copy(alpha = 0.15f),
                         shape = RoundedCornerShape(1)
                     )
-                    .scale(0.65f),
-                tint = Color.Red,
+                    .scale(0.4f),
+                tint = color,
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
@@ -276,7 +328,9 @@ private fun PreviewStatisticsRowView() {
     JucrAppTheme {
         StatisticsRowView(
             title = "240 Volt",
-            description = "Voltage"
+            description = "Voltage",
+            color = Color.Red,
+            icon = Icons.Default.BabyChangingStation
         )
     }
 }
@@ -285,9 +339,17 @@ private fun PreviewStatisticsRowView() {
 @Composable
 @Preview(showSystemUi = true)
 fun PreviewHomeScreenContent() {
-    JucrAppTheme {
-        Column(modifier = Modifier.padding(24.dp)) {
-            HomeScreenContent(stationList = getMockedStations())
+    val statistics = listOf(
+        Statistics.BatteryHealth(240),
+        Statistics.ChargeTime(23),
+        Statistics.Range(100),
+    )
+    JucrAppTheme(darkTheme = false) {
+        Column {
+            HomeScreenContent(
+                stationList = getMockedStations(),
+                statisticsList = statistics
+            )
         }
     }
 }

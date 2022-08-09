@@ -1,44 +1,66 @@
 package com.zenkun.jucr.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 
-private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+val LocalExtendedColors = staticCompositionLocalOf {
+    ExtendedColors(
+        material = lightColorScheme(),
+        red = JucrRed,
+        yellow = JucrYellow,
+        success = JucrGreenSuccess,
+        primarySurface = PrimarySurface
+    )
+}
+private val DarkColorPalette = darkColorScheme(
+    primary = JucrRed,
 )
 
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+private val LightColorPalette = lightColorScheme(
+    primary = JucrRed,
+    onSurface = JucrBlack,
 )
+
+internal val LightTheme = ExtendedColors(
+    material = lightColorScheme(),
+    red = JucrRed,
+    yellow = JucrYellow,
+    success = JucrGreenSuccess,
+    primarySurface = PrimarySurface
+)
+
+internal val DarkTheme = ExtendedColors(
+    material = darkColorScheme(),
+    red = JucrRed,
+    yellow = JucrYellow,
+    success = JucrGreenSuccess,
+    primarySurface = PrimarySurface
+)
+
 
 @Composable
 fun JucrAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
+
+    val theme = if (darkTheme) {
+        DarkTheme.copy(material = DarkColorPalette)
     } else {
-        LightColorPalette
+        LightTheme.copy(material = LightColorPalette)
     }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    CompositionLocalProvider(LocalExtendedColors provides theme) {
+        MaterialTheme(
+            colorScheme = theme.material,
+            content = content
+        )
+    }
+}
+object JucrAppTheme {
+    val colors: ExtendedColors
+        @Composable
+        get() = LocalExtendedColors.current
 }
