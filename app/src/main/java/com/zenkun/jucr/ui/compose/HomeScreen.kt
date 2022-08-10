@@ -42,7 +42,16 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun HomeScreen() {
-
+    val statistics = listOf(
+        ChargingStatistics.BatteryHealth(240),
+        ChargingStatistics.ChargeTime(23),
+        ChargingStatistics.Range("100"),
+    )
+    HomeScreenContent(
+        stationList = getMockedStations(),
+        statisticsList = statistics,
+        currentCharging = 46
+    )
 }
 
 @Composable
