@@ -2,9 +2,9 @@ package com.zenkun.jucr.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +26,7 @@ import com.zenkun.jucr.ui.theme.JucrAppTheme
 fun HomeHeaderView(
     userFirstName: String,
     chargingTimeLeftInMinutes: Int,
+    currentCharging: Int,
     progress: Float = 1f,
     modifier: Modifier = Modifier,
 ) {
@@ -45,18 +46,17 @@ fun HomeHeaderView(
                     .alpha(progress),
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Charging your car..",
+                text = stringResource(id = R.string.header_charging_car_label),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .alpha(progress),
+                    .alpha(progress)
+                    .padding(top = 16.dp),
                 textAlign = TextAlign.Center
             )
         }
-        Spacer(modifier = Modifier.height(100.dp))
 
         val text = buildAnnotatedString {
             withStyle(style = SpanStyle(color = Color.White.copy(alpha = 0.8f))) {
@@ -83,17 +83,32 @@ fun HomeHeaderView(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
-                .alpha(progress),
+                .alpha(progress)
+                .padding(top = 100.dp),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
+
+        CircularProgressCharging(
+            percentage = currentCharging.toFloat() / MAX_LEVEL.toFloat(),
+            number = MAX_LEVEL,
+            radius = 44.dp,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .alpha(progress)
+        )
     }
 }
+
+private const val MAX_LEVEL = 100
 
 @Composable
 @Preview
 fun PreviewHomeHeaderView() {
     JucrAppTheme {
-        HomeHeaderView(chargingTimeLeftInMinutes = 30, userFirstName = "Javi")
+        HomeHeaderView(
+            chargingTimeLeftInMinutes = 30,
+            userFirstName = "Javi",
+            currentCharging = 24
+        )
     }
 }

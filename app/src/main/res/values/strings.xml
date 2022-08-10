@@ -12,4 +12,6 @@
     <string name="header_welcome">Hello %s</string>
     <string name="header_charging_eta_time_label">"Time to end the charge: "</string>
     <string name="header_chargin_minutes_placeholder">%s min</string>
+    <string name="header_charging_car_label">Charging your car..</string>
+    <string name="header_compact_view_charging_percentage_label">Charging: %s</string>
 </resources>

@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -47,10 +48,12 @@ fun HomeScreen() {
 private fun HomeScreenContent(
     stationList: List<StationModel>,
     statisticsList: List<Statistics>,
+    currentCharging: Int,
 ) {
     val lazyColumnState = rememberLazyListState()
     val lazyRowState = rememberLazyListState()
     val state = rememberCollapsingToolbarScaffoldState()
+
     val progress by remember {
         derivedStateOf {
             state.toolbarState.progress
@@ -60,25 +63,50 @@ private fun HomeScreenContent(
         toolbar = {
             Box(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary)
                     .fillMaxWidth()
-                    .height(72.dp)
-                    .pin()
-            )
-            HomeHeaderView(
-                userFirstName = "Javi",
-                progress = progress,
-                modifier = Modifier.parallax(0.3f),
-                chargingTimeLeftInMinutes = 44
+                    .height(100.dp)
+                    .pin(),
             )
 
+            Box {
+                HomeHeaderView(
+                    userFirstName = "Javi",
+                    progress = progress,
+                    //modifier = Modifier.parallax(0.3f),
+                    chargingTimeLeftInMinutes = 44,
+                    currentCharging = currentCharging
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(1f - progress),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Audi RS3",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 20.dp),
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(
+                            id = R.string.header_compact_view_charging_percentage_label,
+                            currentCharging
+                        ),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
             Image(
                 painter = painterResource(id = R.drawable.audi_side_sample),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .size(height = 210.dp, width = 240.dp)
                     .road(
-                        whenCollapsed = Alignment.BottomEnd,
+                        whenCollapsed = Alignment.CenterEnd,
                         whenExpanded = Alignment.Center
                     )
                     .scale(
@@ -88,7 +116,10 @@ private fun HomeScreenContent(
                             progress
                         }
                     )
+                    .offset(y = (-34).dp)
+
             )
+
         },
         state = state,
         modifier = Modifier.fillMaxSize(),
@@ -410,7 +441,8 @@ fun PreviewHomeScreenContent() {
         Column {
             HomeScreenContent(
                 stationList = getMockedStations(),
-                statisticsList = statistics
+                statisticsList = statistics,
+                currentCharging = 46
             )
         }
     }
