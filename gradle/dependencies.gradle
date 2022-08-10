@@ -39,7 +39,6 @@ ext {
             coroutines  : [
                     "org.jetbrains.kotlinx:kotlinx-coroutines-core:${version.coroutinesVersion}",
                     "org.jetbrains.kotlinx:kotlinx-coroutines-android:${version.coroutinesVersion}",
-                    "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${version.coroutinesVersion}",
             ],
     ]
 }

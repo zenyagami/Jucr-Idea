@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zenkun.domain.car.model.ChargingStatistics
 import com.zenkun.jucr.R
 import com.zenkun.jucr.ui.theme.JucrAppTheme
 import com.zenkun.jucr.ui.theme.PrimarySurface
@@ -47,7 +48,7 @@ fun HomeScreen() {
 @Composable
 private fun HomeScreenContent(
     stationList: List<StationModel>,
-    statisticsList: List<Statistics>,
+    statisticsList: List<ChargingStatistics>,
     currentCharging: Int,
 ) {
     val lazyColumnState = rememberLazyListState()
@@ -204,9 +205,9 @@ private fun HomeScreenContent(
 }
 
 @Composable
-fun GetStatisticModel(item: Statistics): StatisticModel {
+fun GetStatisticModel(item: ChargingStatistics): StatisticModel {
     return when (item) {
-        is Statistics.ChargeTime -> {
+        is ChargingStatistics.ChargeTime -> {
             StatisticModel(
                 title = stringResource(id = R.string.charging_time_label, item.minutes),
                 description = stringResource(id = R.string.charging_type_fast_label),
@@ -214,7 +215,7 @@ fun GetStatisticModel(item: Statistics): StatisticModel {
                 color = JucrAppTheme.colors.yellow
             )
         }
-        is Statistics.Range -> {
+        is ChargingStatistics.Range -> {
             StatisticModel(
                 title = stringResource(id = R.string.range_km_label, item.currentRange),
                 description = stringResource(id = R.string.remaining_charge_label),
@@ -222,7 +223,7 @@ fun GetStatisticModel(item: Statistics): StatisticModel {
                 color = JucrAppTheme.colors.success
             )
         }
-        is Statistics.BatteryHealth -> {
+        is ChargingStatistics.BatteryHealth -> {
             StatisticModel(
                 title = stringResource(id = R.string.battery_volts, item.volts),
                 description = stringResource(id = R.string.voltage_label),
@@ -355,12 +356,6 @@ private fun getMockedStations(): List<StationModel> {
     )
 }
 
-sealed class Statistics {
-    data class BatteryHealth(val volts: Int) : Statistics()
-    data class Range(val currentRange: Int) : Statistics()
-    data class ChargeTime(val minutes: Int) : Statistics()
-}
-
 
 @Composable
 fun StatisticsRowView(
@@ -433,9 +428,9 @@ private fun PreviewStatisticsRowView() {
 @Preview(showSystemUi = true)
 fun PreviewHomeScreenContent() {
     val statistics = listOf(
-        Statistics.BatteryHealth(240),
-        Statistics.ChargeTime(23),
-        Statistics.Range(100),
+        ChargingStatistics.BatteryHealth(240),
+        ChargingStatistics.ChargeTime(23),
+        ChargingStatistics.Range("100"),
     )
     JucrAppTheme(darkTheme = false) {
         Column {
