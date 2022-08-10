@@ -29,7 +29,8 @@ ext {
                     "androidx.appcompat:appcompat:${version.appCompat}"
             ],
             design      : [
-                    "com.google.android.material:material:${version.material}"
+                    "com.google.android.material:material:${version.material}",
+                    "me.onebone:toolbar-compose:2.3.4"
             ],
             hiltAndroid : ["com.google.dagger:hilt-android:${version.hilt}",
                            "androidx.hilt:hilt-navigation-compose:1.0.0"],
