@@ -66,8 +66,10 @@ private fun HomeScreenContent(
                     .pin()
             )
             HomeHeaderView(
+                userFirstName = "Javi",
                 progress = progress,
-                modifier = Modifier.parallax(0.3f)
+                modifier = Modifier.parallax(0.3f),
+                chargingTimeLeftInMinutes = 44
             )
 
             Image(
@@ -108,7 +110,7 @@ private fun HomeScreenContent(
                 ) {
                     Text(
                         text = stringResource(id = R.string.car_statistics_label),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(onClick = { /*TODO*/ }) {
@@ -149,7 +151,7 @@ private fun HomeScreenContent(
                 ) {
                     Text(
                         text = stringResource(id = R.string.nearby_super_chargers_label),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -197,15 +199,6 @@ fun GetStatisticModel(item: Statistics): StatisticModel {
                 color = JucrAppTheme.colors.red
             )
         }
-        //TODO REMOVE
-        else -> {
-            StatisticModel(
-                title = stringResource(id = R.string.battery_volts, ""),
-                description = stringResource(id = R.string.voltage_label),
-                icon = ImageVector.vectorResource(R.drawable.ic_car_battery_solid),
-                color = JucrAppTheme.colors.red
-            )
-        }
     }
 }
 
@@ -244,8 +237,9 @@ private fun StationRowView(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stationModel.address,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "${stationModel.currentAvailableCharger} / ${stationModel.maxAvailableChargers}",
                     style = MaterialTheme.typography.bodySmall,

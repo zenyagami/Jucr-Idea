@@ -9,4 +9,7 @@
     <string name="range_km_label">%s Km</string>
     <string name="remaining_charge_label">Remaining charge</string>
     <string name="charging_type_fast_label">Fast charging</string>
+    <string name="header_welcome">Hello %s</string>
+    <string name="header_charging_eta_time_label">"Time to end the charge: "</string>
+    <string name="header_chargin_minutes_placeholder">%s min</string>
 </resources>

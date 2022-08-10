@@ -55,10 +55,12 @@ fun JucrAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
     CompositionLocalProvider(LocalExtendedColors provides theme) {
         MaterialTheme(
             colorScheme = theme.material,
-            content = content
+            content = content,
+            typography = Typography
         )
     }
 }
+
 object JucrAppTheme {
     val colors: ExtendedColors
         @Composable

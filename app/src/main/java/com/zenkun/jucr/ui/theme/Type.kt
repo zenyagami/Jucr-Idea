@@ -1,28 +1,62 @@
 package com.zenkun.jucr.ui.theme
 
-import androidx.compose.material.Typography
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.zenkun.jucr.R
 
-// Set of Material typography styles to start with
+private val montserratFamily = FontFamily(
+    Font(R.font.montserrat_bold, FontWeight.Bold),
+    Font(R.font.montserrat_semibold, FontWeight.SemiBold),
+    Font(R.font.montserrat_light, FontWeight.Light),
+)
+
+private val defaultTypography = Typography()
 val Typography = Typography(
-    body1 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
-    )
-    /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
+    headlineSmall = defaultTypography.headlineSmall.copy(
+        fontFamily = montserratFamily
     ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-    */
+    displaySmall = defaultTypography.displaySmall.copy(
+        fontFamily = montserratFamily
+    ),
+    displayMedium = defaultTypography.displayMedium.copy(
+        fontFamily = montserratFamily
+    ),
+    displayLarge = defaultTypography.displayLarge.copy(
+        fontFamily = montserratFamily
+    ),
+
+    titleMedium = defaultTypography.titleMedium.copy(
+        fontFamily = montserratFamily,
+        fontWeight = FontWeight.Bold,
+    ),
+    titleLarge = defaultTypography.titleLarge.copy(
+        fontFamily = montserratFamily
+    ),
+
+    titleSmall = defaultTypography.titleSmall.copy(
+        fontFamily = montserratFamily
+    ),
+    bodyLarge = defaultTypography.bodyLarge.copy(
+        fontFamily = montserratFamily
+    ),
+    bodyMedium = defaultTypography.bodyMedium.copy(
+        fontFamily = montserratFamily,
+        fontWeight = FontWeight.SemiBold,
+    ),
+    bodySmall = defaultTypography.bodySmall.copy(
+        fontFamily = montserratFamily
+    ),
+    labelLarge = defaultTypography.labelLarge.copy(
+        fontFamily = montserratFamily
+    ),
+    labelMedium = defaultTypography.labelMedium.copy(
+        fontFamily = montserratFamily
+    ),
+    labelSmall = defaultTypography.labelSmall.copy(
+        fontSize = 12.sp,
+        fontFamily = montserratFamily
+    ),
 )
